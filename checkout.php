@@ -1,3 +1,46 @@
+<?php
+include "config.php";
+
+// Xử lý khi nhấn "Đặt hàng"
+if (isset($_POST['place_order'])) {
+    $name = $_POST['name'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+
+    if (empty($_SESSION['cart'])) {
+        $error = "Giỏ hàng trống!";
+    } else {
+        // Tính tổng tiền đơn hàng
+        $total_price = 0;
+        foreach ($_SESSION['cart'] as $item) {
+            $total_price += $item['price'] * $item['quantity'];
+        }
+
+        // Lưu đơn hàng vào database
+        $stmt = $conn->prepare("INSERT INTO orders (name, phone, address, total_price) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("sssi", $name, $phone, $address, $total_price);
+        $stmt->execute();
+        $order_id = $stmt->insert_id; // Lấy ID đơn hàng vừa tạo
+        $stmt->close();
+
+        // Lưu sản phẩm vào order_items
+        $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+        foreach ($_SESSION['cart'] as $item) {
+            $stmt->bind_param("iiii", $order_id, $item['id'], $item['quantity'], $item['price']);
+            $stmt->execute();
+        }
+        $stmt->close();
+
+        // Xóa giỏ hàng sau khi đặt hàng thành công
+        unset($_SESSION['cart']);
+
+        // Chuyển hướng đến trang thông báo thành công
+        header("Location: success.php");
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>

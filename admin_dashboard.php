@@ -1,7 +1,7 @@
 <?php
 include "config.php";
 
-// Kiểm tra xem người dùng đã đăng nhập và có quyền admin chưa
+// Kiểm tra quyền admin
 if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "admin") {
     echo "<script>alert('Bạn không có quyền truy cập!'); window.location='index.php';</script>";
     exit();
@@ -11,6 +11,8 @@ if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "admin") {
 $result_products = $conn->query("SELECT * FROM products");
 // Lấy danh sách người dùng
 $result_users = $conn->query("SELECT iduser, taikhoan, role FROM user");
+// Lấy danh sách đơn hàng
+$result_orders = $conn->query("SELECT * FROM orders");
 ?>
 
 <!DOCTYPE html>
@@ -21,24 +23,11 @@ $result_users = $conn->query("SELECT iduser, taikhoan, role FROM user");
     <title>🎀 Quản trị - Cửa hàng đồ ăn vặt Em Kem 🍭</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #FFE4E1;
-            font-family: 'Arial', sans-serif;
-        }
-        .container {
-            margin-top: 20px;
-        }
-        h2 {
-            color: #D63384;
-        }
-        .btn-custom {
-            background-color: #FF69B4;
-            color: white;
-            font-weight: bold;
-        }
-        .btn-custom:hover {
-            background-color: #FF1493;
-        }
+        body { background-color: #FFE4E1; font-family: 'Arial', sans-serif; }
+        .container { margin-top: 20px; }
+        h2 { color: #D63384; }
+        .btn-custom { background-color: #FF69B4; color: white; font-weight: bold; }
+        .btn-custom:hover { background-color: #FF1493; }
     </style>
 </head>
 <body>
@@ -98,6 +87,42 @@ $result_users = $conn->query("SELECT iduser, taikhoan, role FROM user");
                     <td><?php echo $row["iduser"]; ?></td>
                     <td><?php echo $row["taikhoan"]; ?></td>
                     <td><?php echo ucfirst($row["role"]); ?></td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
+
+    <h2 class="text-center mt-5">📦 Quản lý Đơn hàng</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID Đơn</th>
+                <th>👤 Người đặt</th>
+                <th>📞 Số điện thoại</th>
+                <th>📍 Địa chỉ</th>
+                <th>📅 Ngày đặt</th>
+                <th>🚦 Trạng thái</th>
+                <th>⚙️ Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while ($row = $result_orders->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo $row["id"]; ?></td>
+                    <td><?php echo $row["name"]; ?></td>
+                    <td><?php echo $row["phone"]; ?></td>
+                    <td><?php echo $row["address"]; ?></td>
+                    <td><?php echo $row["created_at"]; ?></td>
+                    <td>
+                        <form method="POST" action="update_order.php">
+                            <input type="hidden" name="order_id" value="<?php echo $row['id']; ?>">
+                            <select name="status" class="form-select" onchange="this.form.submit()">
+                                <option value="Chờ duyệt" <?php if ($row['status'] == 'Chờ duyệt') echo 'selected'; ?>>Chờ duyệt</option>
+                                <option value="Đang giao" <?php if ($row['status'] == 'Đang giao') echo 'selected'; ?>>Đang giao</option>
+                                <option value="Đã giao" <?php if ($row['status'] == 'Đã giao') echo 'selected'; ?>>Đã giao</option>
+                            </select>
+                        </form>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
