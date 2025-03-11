@@ -1,30 +1,27 @@
 <?php
 session_start();
-
-// Chặn truy cập nếu giỏ hàng trống
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Xử lý xóa sản phẩm khỏi giỏ hàng
+// Xóa sản phẩm khỏi giỏ hàng
 if (isset($_POST["remove"])) {
     $product_id = $_POST["product_id"];
     foreach ($_SESSION["cart"] as $key => $item) {
-        if ($item["id"] == $product_id) {
+        if (isset($item["id"]) && $item["id"] == $product_id) {
             unset($_SESSION["cart"]["$key"]);
             break;
         }
     }
-    $_SESSION["cart"] = array_values($_SESSION["cart"]); // Reset key array
+    $_SESSION["cart"] = array_values($_SESSION["cart"]);
 }
 
-// Xử lý cập nhật số lượng sản phẩm
+// Cập nhật số lượng sản phẩm
 if (isset($_POST["update_quantity"])) {
     $product_id = $_POST["product_id"];
     $new_quantity = max(1, (int)$_POST["quantity"]);
-
     foreach ($_SESSION["cart"] as &$item) {
-        if ($item["id"] == $product_id) {
+        if (isset($item["id"]) && $item["id"] == $product_id) {
             $item["quantity"] = $new_quantity;
             break;
         }
@@ -40,34 +37,14 @@ if (isset($_POST["update_quantity"])) {
     <title>Giỏ hàng - Cửa hàng đồ ăn vặt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #ffe6f2;
-        }
-        .navbar {
-            background-color: #ff85a2 !important;
-        }
-        .cart-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-        }
-        .cart-item {
-            border-bottom: 1px solid #ff85a2;
-        }
-        .btn-primary {
-            background-color: #ff4d79;
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #e6005c;
-        }
-        .btn-danger {
-            background-color: #ff4d4d;
-            border: none;
-        }
-        .btn-danger:hover {
-            background-color: #cc0000;
-        }
+        body { background-color: #ffe6f2; }
+        .navbar { background-color: #ff85a2 !important; }
+        .cart-container { background: white; border-radius: 10px; padding: 20px; }
+        .cart-item { border-bottom: 1px solid #ff85a2; padding: 15px 0; }
+        .btn-primary { background-color: #ff4d79; border: none; }
+        .btn-primary:hover { background-color: #e6005c; }
+        .btn-danger { background-color: #ff4d4d; border: none; }
+        .btn-danger:hover { background-color: #cc0000; }
     </style>
 </head>
 <body>
@@ -90,23 +67,24 @@ if (isset($_POST["update_quantity"])) {
         <?php if (!empty($_SESSION["cart"])): ?>
             <?php $total = 0; ?>
             <?php foreach ($_SESSION["cart"] as $item): ?>
-                <div class="cart-item d-flex justify-content-between align-items-center py-3">
-                    <img src="upload/<?php echo $item['image']; ?>" width="80" height="80" class="rounded">
+                <?php if (!isset($item['id'], $item['name'], $item['price'], $item['quantity'], $item['image'])) continue; ?>
+                <div class="cart-item d-flex justify-content-between align-items-center">
+                    <img src="upload/<?php echo htmlspecialchars($item['image']); ?>" width="80" height="80" class="rounded">
                     <div>
-                        <p class="mb-1 fw-bold text-dark"><?php echo $item['name']; ?></p>
-                        <p class="mb-1 text-danger fw-bold"><?php echo number_format($item['price'], 0, ",", "."); ?> VNĐ</p>
+                        <p class="mb-1 fw-bold text-dark"><?php echo htmlspecialchars($item['name']); ?></p>
+                        <p class="mb-1 text-danger fw-bold"><?php echo number_format((float)$item['price'], 0, ",", "."); ?> VNĐ</p>
                         <form method="post" action="" class="d-inline">
-                            <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
-                            <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1" class="text-center w-25">
+                            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['id']); ?>">
+                            <input type="number" name="quantity" value="<?php echo (int)$item['quantity']; ?>" min="1" class="text-center w-25">
                             <button type="submit" name="update_quantity" class="btn btn-sm btn-primary">Cập nhật</button>
                         </form>
                         <form method="post" action="" class="d-inline">
-                            <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
+                            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['id']); ?>">
                             <button type="submit" name="remove" class="btn btn-sm btn-danger">Xóa</button>
                         </form>
                     </div>
                 </div>
-                <?php $total += $item['price'] * $item['quantity']; ?>
+                <?php $total += (float)$item['price'] * (int)$item['quantity']; ?>
             <?php endforeach; ?>
             <p class="total-price text-end fw-bold mt-3 text-danger">Tổng cộng: <?php echo number_format($total, 0, ",", "."); ?> VNĐ</p>
             <?php if (isset($_SESSION["user"])): ?>
