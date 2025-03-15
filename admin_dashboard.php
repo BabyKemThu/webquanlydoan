@@ -111,6 +111,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_product"])) {
 <div class="container">
     <h2 class="text-center mt-5">🍲 Quản lý Đồ ăn</h2>
     <button class="btn btn-primary" onclick="document.getElementById('addForm').style.display='block'">➕ Thêm sản phẩm</button>
+    <div id="addForm" style="display:none; margin-top: 20px;">
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Tên sản phẩm:</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Giá:</label>
+            <input type="number" name="price" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Hình ảnh:</label>
+            <input type="file" name="image" class="form-control" required>
+        </div>
+        <button type="submit" name="add_product" class="btn btn-success">✔ Thêm</button>
+    </form>
+</div>
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
