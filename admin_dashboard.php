@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_product"])) {
     $name = $_POST["name"];
     $price = $_POST["price"];
     $image = $_FILES["image"]["name"];
-    $target = "upload/" . basename($image);
+    $target = "uploads/" . basename($image);
     move_uploaded_file($_FILES["image"]["tmp_name"], $target);
     $conn->query("INSERT INTO products (name, price, image) VALUES ('$name', '$price', '$image')");
     echo "<script>alert('Đã thêm sản phẩm!'); window.location='admin_dashboard.php';</script>";
