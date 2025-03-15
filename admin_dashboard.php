@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_product"])) {
 
 <div class="container">
     <h2 class="text-center mt-5">🍲 Quản lý Đồ ăn</h2>
-    <button class="btn btn-primary" onclick="document.getElementById('addForm').style.display='block'">➕ Thêm sản phẩm</button>
+    <a href="add_product.php" class="btn btn-primary">➕ Thêm sản phẩm</a>
     <div id="addForm" style="display:none; margin-top: 20px;">
     <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
