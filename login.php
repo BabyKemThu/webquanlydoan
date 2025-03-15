@@ -126,8 +126,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <div class="left">
-            <h1>Cửa hàng đồ ăn vặt EM KEM</h1>
-            <p>"Ngon khó cưỡng – Giòn rụm từng miếng!" 🍟🍫</p>
+            <h1>Cửa hàng đồ ăn vặt EM THƯ</h1>
+            <p>"Ngon khó cưỡng – Ăn đi chờ chi!" 🍟🍫</p>
         </div>
         <div class="login-box">
             <form method="post">

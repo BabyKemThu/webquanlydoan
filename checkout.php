@@ -1,3 +1,4 @@
+
 <?php
 include "config.php";
 
@@ -94,7 +95,7 @@ if (isset($_POST['place_order'])) {
                 <div class="alert alert-danger"> <?php echo $error; ?> </div>
             <?php endif; ?>
             <form method="POST" action="">
-                <div class="mb-3">
+<div class="mb-3">
                     <label class="form-label">Họ và Tên</label>
                     <input type="text" name="name" class="form-control" required>
                 </div>
