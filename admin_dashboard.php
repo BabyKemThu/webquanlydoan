@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_product"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎀 Quản trị - Cửa hàng đồ ăn vặt Em Thư 🍭</title>
+    <title>🎀 Quản trị - Cửa hàng đồ ăn vặt 🍭</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_product"])) {
 </nav>
 
 <div class="container">
-    <h2 class="text-center mt-5">🍲 Quản lý Đồ ăn</h2>
+    <h2 class="text-center mt-5">🍲 Quản lý sản phẩm</h2>
     <a href="add_product.php" class="btn btn-primary">➕ Thêm sản phẩm</a>
     <div id="addForm" style="display:none; margin-top: 20px;">
     <form method="post" enctype="multipart/form-data">
